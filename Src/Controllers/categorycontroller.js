@@ -76,13 +76,37 @@ const categorycontroller = {
             return res.status(204).json({ message: 'Categoria removida com sucesso' });
           } else {
             // Não há dados a serem excluídos
-            return res.status(404).json({ message: 'Não há categorias a serem excluídas' });
+            return res.status(404).json({ message: 'Exclusão não realizada. Esta categoria não existe' });
           }
         } catch (error) {
           // Erro interno do servidor
           return res.status(500).json({ error: error.message });
         }
       },
+
+      async updatecategory(req, res) {
+        const { id } = req.params;
+        const { name, description } = req.body;
+      
+        try {
+          
+          const existingcategory = await db.query("SELECT * FROM category WHERE id = $1", [id]);
+      
+          if (existingcategory.rows.length === 0) {
+            return res.status(404).json({ error: "Categoria não encontrada" });
+          }
+      
+        
+          await db.query(
+            "UPDATE category SET name = $1, description = $2",
+            [name, description]
+          );
+      
+          res.status(200).json({ message: "Categoria atualizada com sucesso" });
+        } catch (error) {
+          res.status(500).json({ error: error.message });
+        }
+    },
     };
 
 

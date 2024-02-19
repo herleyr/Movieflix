@@ -1,8 +1,10 @@
 const express = require("express");
 const router = express.Router();
+const moviescontroller = require("../Controllers/moviescontroller.js")
 
-router.get("/", function (req, res) {
-    res.send("Bem-vindo(a) ao MovieFlix. Confira sua lista de filmes");    
-});
+router.get("/", moviescontroller.findAll); 
+router.get("/:id", moviescontroller.find);
+router.post("/", moviescontroller.create);
+router.delete("/:id", moviescontroller.delete);
 
 module.exports = router;

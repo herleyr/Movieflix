@@ -1,51 +1,88 @@
-
+const db = require("../db");
 
 const categorycontroller = {
-    findAll(req, res) {
-        res.json([
-            { 
-                id: 1,
-                name: 'Filmes de Ação',
-                description: "Aqui estão os filmes de ação que você escolheu" 
-            },
-
-            { id: 2, name: "Filmes de Comédia", description: "Aqui estão os filmes de comédia que você escolheu" },
-            { id: 3, name: "Filmes de Terror", description: "Aqui estão os filmes de terror que você escolheu" },
-            { id: 4, name: "Animes", description: "Aqui estão os animes que você escolheu" }
-
-
-        ]);
-    },
+    async findAll(req, res) {
+        try {
+          const category = await db.query("SELECT * FROM category");
+          const categories = category.rows;
+      
+          if (categories.length === 0) {
+            // Não existem categorias cadastradas
+            return res.status(200).json({ message: 'Não existem categorias cadastradas' });
+          }
+      
+          res.status(200).json(categories);
+        } catch (error) {
+          res.status(500).json({ error: error.message });
+        }
+      },
     
-    find(req, res) {
+      async find(req, res) {
         const { id } = req.params;
-
-        res.json({
-            id: id,
-            name: "Filmes de Ação",
-            description: "Aqui estão os filmes de ação que você escolheu"
-        })
-    },
-
-    create(req, res) {
+    
+        try {
+          const category = await db.query("SELECT * FROM category WHERE id = $1", [
+            id,
+          ]);
+    
+          if (category.rows.length > 0) {
+            res.json(category.rows[0]);
+          } else {
+            res.status(404).json({ error: "Categoria não encontrada" });
+          }
+        } catch (error) {
+          res.status(500).json({ error: error.message });
+        }
+      },
+    
+      async create(req, res) {
         const { name, description } = req.body;
-        
-        res.status(201)
-            .json({
-            id: Number.MAX_SAFE_INTEGER,
-            name: name,
-            description: description,
-        })
-    },
+      
+        try {
+          // Verifica se a categoria já existe
+          const existingCategory = await db.query(
+            "SELECT * FROM category WHERE name = $1",
+            [name]
+          );
+      
+          if (existingCategory.rowCount > 0) {
+            // Categoria já existe
+            return res.status(409).json({ message: 'Categoria já existente' });
+          }
+      
+          // Insere a nova categoria
+          const newCategory = await db.query(
+            "INSERT INTO category (name, description) VALUES ($1, $2) RETURNING *",
+            [name, description]
+          );
+      
+          res.status(201).json(newCategory.rows[0]);
+        } catch (error) {
+          res.status(500).json({ error: error.message });
+        }
+      },
 
-    delete(req, res) {
+      async delete(req, res) {
         const { id } = req.params;
-        res.status(204).json();
-    
-
-    },
-    
-    
+      
+        try {
+          const result = await db.query(
+            "DELETE FROM category WHERE id = $1 RETURNING *",
+            [id]
+          );
+      
+          if (result.rowCount > 0) {
+            // Excluiu com sucesso
+            return res.status(204).json({ message: 'Categoria removida com sucesso' });
+          } else {
+            // Não há dados a serem excluídos
+            return res.status(404).json({ message: 'Não há categorias a serem excluídas' });
+          }
+        } catch (error) {
+          // Erro interno do servidor
+          return res.status(500).json({ error: error.message });
+        }
+      },
     };
 
 

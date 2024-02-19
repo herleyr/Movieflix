@@ -45,5 +45,5 @@
     "undefsafe": "^2.0.5",
     "yallist": "^4.0.0"
   },
-  "description": ""
+  "description": "```\r - src\r     - controllers\r         - MovieflixController.js\r         - CategoryController.js\r     - routes\r         - movies.js\r         - category.js\r     - db\r         - index.js\r - index.js\r - package.json\r - package-lock.json\r - .env\r - .env.example\r - .gitignore\r - readme.md"
 }

@@ -1,8 +1,11 @@
 const express = require("express");
 const router = express.Router();
+const categorycontroller = require("../Controllers/categorycontroller.js")
 
-router.get("/", function (req, res) {
-    res.send("Bem-vindo(a) ao MovieFlix. Escolha seu filme por categoria");    
-});
+router.get("/", categorycontroller.findAll); 
+router.get("/:id", categorycontroller.find);
+router.post("/", categorycontroller.create);
+router.delete("/:id", categorycontroller.delete);
+
 
 module.exports = router;

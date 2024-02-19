@@ -8,6 +8,7 @@
         - movies.js
         - category.js
     - db
+        - index.js
 - index.js
 - package.json
 - package-lock.json

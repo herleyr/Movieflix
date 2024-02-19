@@ -4,12 +4,12 @@ const categoryRoutes = require("./Src/Routes/category")
 const moviesRoutes = require("./Src/Routes/movies")
 
 const app = express();
-
+const PORT = process.env.PORT || 3000
 app.use(bodyparser.json());
 
 app.use("/category", categoryRoutes);
 app.use("/movies", moviesRoutes);
 
-app.listen(3000, () => {
-    console.log('server running on http://localhost:3000/')
+app.listen(PORT, () => {
+    console.log('server running on http://localhost:${PORT}/')
 });

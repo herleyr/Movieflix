@@ -7,7 +7,7 @@ const categorycontroller = {
           const categories = category.rows;
       
           if (categories.length === 0) {
-            // Não existem categorias cadastradas
+          
             return res.status(200).json({ message: 'Não existem categorias cadastradas' });
           }
       
@@ -39,18 +39,18 @@ const categorycontroller = {
         const { name, description } = req.body;
       
         try {
-          // Verifica se a categoria já existe
+          
           const existingCategory = await db.query(
             "SELECT * FROM category WHERE name = $1",
             [name]
           );
       
           if (existingCategory.rowCount > 0) {
-            // Categoria já existe
+           
             return res.status(409).json({ message: 'Categoria já existente' });
           }
       
-          // Insere a nova categoria
+          
           const newCategory = await db.query(
             "INSERT INTO category (name, description) VALUES ($1, $2) RETURNING *",
             [name, description]
@@ -72,14 +72,14 @@ const categorycontroller = {
           );
       
           if (result.rowCount > 0) {
-            // Excluiu com sucesso
+          
             return res.status(204).json({ message: 'Categoria removida com sucesso' });
           } else {
-            // Não há dados a serem excluídos
+           
             return res.status(404).json({ message: 'Exclusão não realizada. Esta categoria não existe' });
           }
         } catch (error) {
-          // Erro interno do servidor
+         
           return res.status(500).json({ error: error.message });
         }
       },

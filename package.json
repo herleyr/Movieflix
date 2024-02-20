@@ -21,6 +21,7 @@
     "braces": "^3.0.2",
     "chokidar": "^3.6.0",
     "concat-map": "^0.0.1",
+    "cors": "^2.8.5",
     "dotenv": "^16.4.4",
     "express": "^4.18.2",
     "fill-range": "^7.0.1",
